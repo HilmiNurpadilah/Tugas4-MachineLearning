@@ -6,6 +6,12 @@ Dibuat untuk TA-04 Machine Learning
 from flask import Flask, render_template, request, jsonify
 import joblib
 import numpy as np
+import sys
+# Fix numpy._core compatibility untuk load scaler
+if not hasattr(np, '_core'):
+    np._core = np.core
+    sys.modules['numpy._core'] = np.core
+
 import pandas as pd
 from tensorflow.keras.models import load_model
 import matplotlib
@@ -51,6 +57,8 @@ except Exception as e:
 
 # Compile model
 model.compile(optimizer='adam', loss='mse', metrics=['mae'])
+
+# Load scaler (numpy._core fix sudah di atas)
 scaler = joblib.load(SCALER_PATH)
 
 with open(INFO_PATH, 'r') as f:
