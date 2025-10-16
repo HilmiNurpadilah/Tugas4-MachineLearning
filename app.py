@@ -25,35 +25,8 @@ INFO_PATH = 'models/model_info.json'
 DATA_PATH = 'data_for_app.csv'
 
 print("Loading model dan scaler...")
-# Load model - coba format .keras dulu (compatible dengan Keras 3.x)
-# Jika tidak ada, gunakan .h5 dengan safe_mode=False
-import tensorflow as tf
-
-keras_model_path = 'models/best_model.keras'
-if os.path.exists(keras_model_path):
-    print(f"Loading Keras 3.x format model: {keras_model_path}")
-    model = tf.keras.models.load_model(keras_model_path, compile=False)
-else:
-    print(f"Loading legacy H5 format model: {MODEL_PATH}")
-    # Untuk Keras 3.x, gunakan safe_mode=False untuk backward compatibility
-    try:
-        model = tf.keras.models.load_model(MODEL_PATH, compile=False, safe_mode=False)
-    except:
-        # Fallback: load weights only
-        from tensorflow.keras.models import Sequential
-        from tensorflow.keras.layers import LSTM, Dense, Dropout
-        
-        model = Sequential([
-            LSTM(100, return_sequences=True, input_shape=(60, 8)),
-            Dropout(0.2),
-            LSTM(50, return_sequences=False),
-            Dropout(0.2),
-            Dense(25, activation='relu'),
-            Dense(1)
-        ])
-        model.load_weights(MODEL_PATH)
-
-# Compile model
+# Load model dengan TensorFlow 2.x
+model = load_model(MODEL_PATH, compile=False)
 model.compile(optimizer='adam', loss='mse', metrics=['mae'])
 scaler = joblib.load(SCALER_PATH)
 
