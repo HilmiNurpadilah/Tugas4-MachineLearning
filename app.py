@@ -25,8 +25,31 @@ INFO_PATH = 'models/model_info.json'
 DATA_PATH = 'data_for_app.csv'
 
 print("Loading model dan scaler...")
-# Load model dengan TensorFlow 2.x
-model = load_model(MODEL_PATH, compile=False)
+# Rebuild model architecture untuk avoid Keras 3.x compatibility issues
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import LSTM, Dense, Dropout
+
+# Rebuild exact architecture
+model = Sequential([
+    LSTM(100, return_sequences=True, input_shape=(60, 8)),
+    Dropout(0.2),
+    LSTM(50, return_sequences=False),
+    Dropout(0.2),
+    Dense(25, activation='relu'),
+    Dense(1)
+])
+
+# Load weights dari .h5 file
+print(f"Loading weights from: {MODEL_PATH}")
+try:
+    model.load_weights(MODEL_PATH)
+    print("✅ Model weights loaded successfully!")
+except Exception as e:
+    print(f"⚠️ Error loading weights: {e}")
+    # Fallback: try load full model
+    model = load_model(MODEL_PATH, compile=False)
+
+# Compile model
 model.compile(optimizer='adam', loss='mse', metrics=['mae'])
 scaler = joblib.load(SCALER_PATH)
 
