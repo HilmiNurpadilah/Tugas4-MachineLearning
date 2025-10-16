@@ -3,6 +3,12 @@ Aplikasi Flask untuk Prediksi Suhu Menggunakan LSTM
 Dibuat untuk TA-04 Machine Learning
 """
 
+import os
+# Set TensorFlow environment variables BEFORE import
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
+os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
+os.environ['PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION'] = 'python'
+
 from flask import Flask, render_template, request, jsonify
 import joblib
 import numpy as np
@@ -13,14 +19,14 @@ if not hasattr(np, '_core'):
     sys.modules['numpy._core'] = np.core
 
 import pandas as pd
-from tensorflow.keras.models import load_model
+# Lazy import TensorFlow untuk avoid segfault di startup
+# from tensorflow.keras.models import load_model
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import io
 import base64
 import json
-import os
 
 app = Flask(__name__)
 
@@ -31,11 +37,18 @@ INFO_PATH = 'models/model_info.json'
 DATA_PATH = 'data_for_app.csv'
 
 print("Loading model dan scaler...")
-# Rebuild model architecture untuk avoid Keras 3.x compatibility issues
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import LSTM, Dense, Dropout
+# Lazy import TensorFlow di sini untuk avoid startup segfault
+print("Importing TensorFlow...")
+try:
+    from tensorflow.keras.models import Sequential, load_model
+    from tensorflow.keras.layers import LSTM, Dense, Dropout
+    print("✅ TensorFlow imported successfully!")
+except Exception as e:
+    print(f"❌ Failed to import TensorFlow: {e}")
+    raise
 
-# Rebuild exact architecture
+# Rebuild model architecture untuk avoid Keras 3.x compatibility issues
+print("Building model architecture...")
 model = Sequential([
     LSTM(100, return_sequences=True, input_shape=(60, 8)),
     Dropout(0.2),
@@ -56,6 +69,7 @@ except Exception as e:
     model = load_model(MODEL_PATH, compile=False)
 
 # Compile model
+print("Compiling model...")
 model.compile(optimizer='adam', loss='mse', metrics=['mae'])
 
 # Load scaler (numpy._core fix sudah di atas)
