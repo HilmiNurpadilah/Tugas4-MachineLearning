@@ -1,0 +1,17 @@
+{
+    "timesteps": 60,
+    "n_features": 8,
+    "fitur_model": [
+        "suhu",
+        "kelembaban_relatif",
+        "tekanan_udara",
+        "kecepatan_angin",
+        "curah_hujan",
+        "radiasi_gelombang_pendek",
+        "bulan",
+        "hari_dalam_tahun"
+    ],
+    "test_rmse": 0.8624061237644545,
+    "test_mae": 0.7652028547301724,
+    "test_r2": 0.9488616985470468
+}

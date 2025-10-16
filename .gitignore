@@ -1,0 +1,35 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+ENV/
+.venv
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Model files (terlalu besar untuk git, upload manual)
+# models/*.h5
+# models/*.save
+
+# Data
+*.csv
+!cleaned_weather.csv
+
+# Flask
+instance/
+.webassets-cache
