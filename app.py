@@ -79,8 +79,11 @@ scaler = MinMaxScaler()
 # Load data untuk fit scaler
 print(f"Loading data from: {DATA_PATH}")
 df_temp = pd.read_csv(DATA_PATH)
-scaler.fit(df_temp[['suhu', 'kelembaban', 'tekanan', 'angin', 'hujan', 'radiasi', 'arah_angin', 'suhu_titik_embun']])
-print("✅ Scaler created successfully!")
+# Fit scaler dengan kolom yang ada di data_for_app.csv
+feature_columns = ['suhu', 'kelembaban_relatif', 'tekanan_udara', 'kecepatan_angin', 
+                   'curah_hujan', 'radiasi_gelombang_pendek', 'bulan', 'hari_dalam_tahun']
+scaler.fit(df_temp[feature_columns])
+print(f"✅ Scaler created successfully with {len(feature_columns)} features!")
 
 print(f"Loading model info from: {INFO_PATH}")
 with open(INFO_PATH, 'r') as f:
