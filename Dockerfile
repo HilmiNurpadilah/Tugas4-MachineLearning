@@ -1,5 +1,5 @@
-# Use official Python slim image
-FROM python:3.10-slim-bullseye
+# Use Python 3.9 for better TensorFlow compatibility
+FROM python:3.9-slim-bullseye
 
 # Set working directory
 WORKDIR /app
