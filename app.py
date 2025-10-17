@@ -73,8 +73,21 @@ print("Compiling model...")
 model.compile(optimizer='adam', loss='mse', metrics=['mae'])
 
 # Load scaler (numpy._core fix sudah di atas)
-scaler = joblib.load(SCALER_PATH)
+print(f"Loading scaler from: {SCALER_PATH}")
+try:
+    scaler = joblib.load(SCALER_PATH)
+    print("✅ Scaler loaded successfully!")
+except Exception as e:
+    print(f"⚠️ Error loading scaler: {e}")
+    # Fallback: create new scaler from data
+    from sklearn.preprocessing import MinMaxScaler
+    scaler = MinMaxScaler()
+    # Load data untuk fit scaler
+    df_temp = pd.read_csv(DATA_PATH)
+    scaler.fit(df_temp[['suhu', 'kelembaban', 'tekanan', 'angin', 'hujan', 'radiasi', 'arah_angin', 'suhu_titik_embun']])
+    print("✅ Scaler created from data!")
 
+print(f"Loading model info from: {INFO_PATH}")
 with open(INFO_PATH, 'r') as f:
     model_info = json.load(f)
 
