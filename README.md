@@ -268,8 +268,8 @@ batch_size = 16  # default: 32
 
 ## 👤 Author
 
-**Nama:** [Nama Anda]  
-**NIM:** [NIM Anda]  
+**Nama:** Hilmi Nurpadilah  
+**NIM:** 301230004
 **Mata Kuliah:** Praktikum Machine Learning  
 **Tugas:** TA-04 - Prediksi Time Series dengan LSTM
 
